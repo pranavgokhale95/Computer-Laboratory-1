@@ -1,0 +1,100 @@
+#include <iostream>
+#include <pthread.h>
+
+#define null NULL
+
+using namespace std;
+
+class quickSort_params{
+
+	private:int *arr;
+    		int low;
+    		int high;
+	public: int partition(int*,int,int);
+		quickSort(void*);
+		quickSort_params(int* a,int l, int h)
+		{
+			
+			arr=a;
+    			low=l;
+    			high=h;
+		}
+
+};
+
+
+int quickSort_params::partition(int arr[],int low,int high){
+
+	pthread_t id=pthread_self();
+    int i=low+1;
+    int j=high;
+
+    int pivot = arr[low];
+
+    while(i<=j){
+
+        while(i<=high && arr[i]<pivot)
+            i++;
+
+        while(j>=low && arr[j]>pivot)
+            j--;
+
+        if (i>=j){
+            int temp = arr[j];
+            arr[j]=arr[low];
+            arr[low]=temp;
+            break;
+        }
+
+        int temp = arr[j];
+        arr[j]=arr[i];
+        arr[i]=temp;
+
+    }
+	cout<<"Thread ID: "<<id<<" for pivot: "<<pivot<<endl;
+
+    return j;
+
+}
+
+void* quickSort_params::quickSort(void *params_dummy){
+    quickSort_params* params = (quickSort_params * )params_dummy;
+
+    if(params->low<params->high){
+        int p = partition(params->arr,params->low,params->high);
+
+        quickSort_params left_param(params->arr, params->low, p-1);
+        pthread_t lthread;
+
+        pthread_create(&lthread,null,quickSort, (void*)&left_param);
+        //quickSort(&left_param);
+
+
+        quickSort_params right_param(params->arr, p+1, params->high);
+        pthread_t rthread;
+        pthread_create(&rthread,null,quickSort, (void*)&right_param);
+
+        pthread_join(lthread,null);
+        pthread_join(rthread,null);
+
+        //quickSort(&right_param);
+    }
+}
+
+int main(){
+    int arr[] = { 33,21,78,2,0,-15};
+    int n = sizeof(arr)/sizeof(arr[0]);
+
+    quickSort_params params(arr, 0, n-1);
+
+    pthread_t main_sort;
+    pthread_create(&main_sort,null,params.quickSort,(void*)&params);
+
+    pthread_join(main_sort,null);
+
+    for(int i=0;i<n;i++)
+        cout<<arr[i]<<" ";
+
+    cout<<endl;
+
+}

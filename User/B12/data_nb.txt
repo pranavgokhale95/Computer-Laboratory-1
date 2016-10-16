@@ -1,0 +1,14 @@
+10 high no fair no
+12 high no excellent no
+32 high no fair yes
+64 medium no fair yes
+65 low yes fair yes
+60 low yes excellent no
+37 low yes excellent yes
+18 medium no fair no
+16 low yes fair yes
+69 medium yes fair yes
+15 medium yes excellent yes
+36 medium no excellent yes
+31 high yes fair yes
+70 medium no excellent no
