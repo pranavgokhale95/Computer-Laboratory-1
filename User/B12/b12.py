@@ -227,3 +227,8 @@ if __name__ == '__main__':
         print "NO"
     else:
         print "YES"    
+'''
+low
+fair
+yes
+'''
